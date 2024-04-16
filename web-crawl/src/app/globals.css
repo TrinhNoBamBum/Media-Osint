@@ -1,0 +1,30 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+
+  }
+}
+
+body {
+
+}
+
+.button{
+  border:1px solid #f1f1f1;
+  background: #19c37d;
+  color:white;
+  border-radius: 20px;
+  padding: 5px 25px 5px 25px;
+  
+  
+}
+.button:hover{
+  cursor: pointer;
+}
