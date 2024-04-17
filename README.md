@@ -9,6 +9,8 @@
 / langdetect                      1.0.9
 / selenium                        4.5.0
 / openai-whisper                  20231117
+/ node :18.17.0
+/ npm 9.6.7
 
  ..... nói chung là cài nhiều cái lắm mà nỏ nhớ , cứ chạy thiếu cái gì thì cài cái đấy\
 / chạy be : python app.py
