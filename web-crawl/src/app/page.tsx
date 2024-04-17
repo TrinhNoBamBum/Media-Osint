@@ -7,14 +7,16 @@ import axios from 'axios';
 import Modal from './modal/page';
 import { useRouter } from 'next/navigation'
 import WordMap from './WordMap/page';
+import ProgressBar from './ProcessBar/page';
+import PieMap from './PieMap/page';
 export default function Home() {
   const router = useRouter()
   const [isTRue, setTrue]=useState(false)
   const [crawlData, setCrawlData] = useState<any>();
   const[topics,setTopics]=useState<any>();
-  const [isOpen, setIsOpen] = useState(false);
-  const openModal = () => setIsOpen(true);
-  const closeModal = () => setIsOpen(false);
+  const [isOpen, setIsOpen1] = useState(false);
+  const openModal = () => setIsOpen1(true);
+  const closeModal = () => setIsOpen1(false);
   const [topic, setTopic] = useState('');
 
   useEffect(()=>{
@@ -90,22 +92,11 @@ export default function Home() {
       <h1 className="text-4xl font-bold mb-4">Đang cập nhật dữ liệu.......................</h1>
       <p className="text-lg">Vui lòng chờ 1 chút</p>
     </div>
-  </div>):(<div className="">
-  <Modal isOpen={isOpen} onClose={closeModal}>
-    <div className='flex gap-2'>
-      <input
-        type="text"
-        name='topic'
-        value={topic}
-        onChange={handleChange}
-        placeholder="Nhập Topic........."
-        className="border border-gray-300 rounded-md p-2 w-full"
-      />
-      <button className='py-2 px-4 rounded-md text-white bg-indigo-400 ' onClick={()=>handleAddTopic(topic)}>OK</button>
-    </div>
-  </Modal>
+  </div>):(<div className="flex">
+  
   {/* <div className='bg-slate-100 py-1.5 flex justify-between px-5'><img src='Untitled.png' className='w-24 h-24'></img><div className='text-center '><h1 className='text-amber-600 font-bold text-4xl'>Hệ thống trinh sát mạng<br></br><h3 className='text-amber-600 font-bold text-4xl'>NDT</h3></h1></div><div><h3 className='font-bold'>Trinh No</h3> <h3 className="font-bold">Lớp :ANHTTT, c155, d1</h3></div></div> */}
-  <div className='w-5/6 m-auto'>
+  
+  <div className='w-1/2 m-auto border-solid border-2 border-slate-400 p-2'>
   <button className="py-2 px-4 rounded-md text-white bg-indigo-400 " onClick={openModal}>Thêm chủ đề</button>
   <button className="py-2 px-4 rounded-md text-white bg-indigo-400 float-right" onClick={handleUpdate}>Cập nhật</button>
     <table className="min-w-full bg-white border rounded-lg overflow-hidden my-2">
@@ -119,22 +110,12 @@ export default function Home() {
       </thead>
       <tbody className="divide-y">
         {
-          // crawlData?.map((item:any,index:any)=>(
-
-          //     <tr>
-          //     <td className="py-3 px-4">{index+1}</td>
-          //     <td className="py-3 px-4">{item[0]['topic']}</td>
-          //     <td className="py-3 px-4">{item.length||0} video</td>
-          //     <td className="py-3 px-4"><p className='button w-1/2' onClick={()=>handleGetDetail( item[0]['topic'])}>Xem chi tiết</p></td>
-          //   </tr>
-
-          // ))
           topics?.map((item:any, index:any)=>(
               <tr>
               <td className="py-3 px-4">{index+1}</td>
               <td className="py-3 px-4">{item}</td>
               <td className="py-3 px-4">{crawlData?.[`${item}`].length||0} video</td>
-              <td className="py-3 px-4"><p className='button w-1/2' onClick={()=>handleGetDetail( item)}>Xem chi tiết</p></td>
+              <td className="py-3 px-4"><p className='button w-1/2' onClick={()=>handleGetDetail( item)}>Xem</p></td>
             </tr>
           ))
 
@@ -143,8 +124,23 @@ export default function Home() {
       </tbody>
     </table>
     </div>
-
+    <div className='w-1/2  border-solid border-2 border-slate-400 p-2'> 
+        <PieMap crawlData={crawlData}/>
+    </div>
   </div>)}
+  <Modal isOpen={isOpen} onClose={closeModal}>
+    <div className='flex gap-2'>
+      <input
+        type="text"
+        name='topic'
+        value={topic}
+        onChange={handleChange}
+        placeholder="Nhập Topic........."
+        className="border border-gray-300 rounded-md p-2 w-full"
+      />
+      <button className='py-2 px-4 rounded-md text-white bg-indigo-400 ' onClick={()=>handleAddTopic(topic)}>OK</button>
+    </div>
+  </Modal>
     </div>
   );
 }

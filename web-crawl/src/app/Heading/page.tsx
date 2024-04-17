@@ -4,8 +4,9 @@ const Heading=()=>{
              <div className='bg-slate-100 py-1.5 flex justify-between px-5'>
                 <img src='Untitled.png' className='w-24 h-24'></img>
                 <div className='text-center '>
-                    <h1 className='text-amber-600 font-bold text-4xl'>Hệ thống trinh sát mạng<br></br>
-                    <h3 className='text-amber-600 font-bold text-4xl'>-----$-----</h3>
+                <h3 className='text-amber-600 font-bold text-3xl'>----------</h3>
+                    <h1 className='text-amber-600 font-bold text-3xl'>Hệ thống trinh sát mạng<br></br>
+                    <h3 className='text-amber-600 font-bold text-3xl'>---------</h3>
                     </h1>
                 </div>
                 <div>
