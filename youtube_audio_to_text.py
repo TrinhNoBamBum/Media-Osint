@@ -3,10 +3,11 @@ import json
 from pytube import YouTube
 from langdetect import detect
 import whisper
-
+from crawlTitle import get_Title
 # Function to process YouTube URL, transcribe, and save result to JSON
 def process_youtube_url(url):
     try:
+        title=get_Title(url)
         # Create a YouTube object from the URL
         yt = YouTube(url)
         # Get the audio stream
@@ -32,7 +33,7 @@ def process_youtube_url(url):
         os.remove(f"{output_path}/{filename}")
         os.rmdir(output_path)
 
-        return {"url": url, "content": transcribed_text}
+        return {"url": url,"title":title, "content": transcribed_text}
 
     except Exception as e:
         print(f"An error occurred while processing {url}: {str(e)}")
