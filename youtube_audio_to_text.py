@@ -44,10 +44,6 @@ def process_youtube_url(url):
             feeling='NEUTRAL'
         print("Transcription:")
         print(transcribed_text)
-        print("Tóm Tăt :", tom_tat)
-        print ("Cảm xúc", feeling)
-        print("Tóm Tăt :", date_view['date'])
-        print ("Cảm xúc", date_view['view'])
 
         # Detect the language
         language = detect(transcribed_text)

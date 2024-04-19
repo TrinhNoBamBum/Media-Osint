@@ -74,6 +74,21 @@ def group_by_user(data, conditions):
                 break  # Thoát khỏi vòng lặp khi đã nhóm được
     return grouped_data
 
+#Hàm thêm dữ liệu vao file json
+def add_to_json(json_file_path, new_item):
+    existing_data = []
+    with open(json_file_path, "r", encoding="utf-8") as json_file:
+        existing_data = json.load(json_file)
+
+    # Thêm đối tượng mới vào danh sách
+    existing_data.append(new_item)
+
+    # Ghi lại dữ liệu đã được cập nhật vào tệp JSON
+    with open(json_file_path, "w", encoding="utf-8") as json_file:
+        json.dump(existing_data, json_file, ensure_ascii=False, indent=4)
+    print("Đã thêm phần tử mới vào tệp JSON.")
+
+
 @app.route('/api/data', methods=['GET'])
 def get_data():
     try:
@@ -86,7 +101,16 @@ def get_data():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     
-
+#API get page
+@app.route('/api/get_pages',methods=['GET'])
+def get_pages():
+    try:
+        # Đọc dữ liệu từ tệp JSON
+        file_path = 'url_page.json'
+        data = read_json_file(file_path)
+        return jsonify(data), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 #api get topic
 @app.route('/api/get_topic', methods=['GET'])
 def get_topic():
@@ -97,10 +121,11 @@ def get_topic():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
 #Viết api update 
-@app.route('/api/update',methods=['PUT'])
+@app.route('/api/update',methods=['POST'])
 def update_data():
+    data = request.json
     try:
-        call_url("https://www.youtube.com/@BBCNews/videos")
+        call_url(data['urlPage'])
         update_dataPY()
         return jsonify("Cập nhật dữ liệu thành công"),  200
     except Exception as e:
@@ -121,8 +146,19 @@ def add_topic():
             return jsonify({'error': 'Không tìm thấy dữ liệu trong yêu cầu'}), 400
     except Exception as e:
         return jsonify({'error': str(e)}), 500
-
-
+#api thêm page
+@app.route('/api/add_page',methods=['POST'])
+def add_page():
+    try:
+        data = request.json
+        if data is not None:
+            # Gọi hàm append_data_to_file để thêm dữ liệu vào tệp
+            add_to_json('url_page.json',data['data'])
+            return jsonify({'message': 'Dữ liệu đã được thêm vào tệp thành công'}), 200
+        else:
+            return jsonify({'error': 'Không tìm thấy dữ liệu trong yêu cầu'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 if __name__ == '__main__':
     app.run(debug=True)
 
