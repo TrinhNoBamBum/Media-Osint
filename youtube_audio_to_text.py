@@ -4,10 +4,21 @@ from pytube import YouTube
 from langdetect import detect
 import whisper
 from crawlTitle import get_Title
+from pt_cam_xuc import text_sentiment_analysis
+from tom_tat_doc import Tom_Tat
+from covert import Covert
 # Function to process YouTube URL, transcribe, and save result to JSON
 def process_youtube_url(url):
     try:
-        title=get_Title(url)
+        info=get_Title(url)
+        global date_view
+        if info['view']:
+            date_view=Covert(info['view'])
+        else:
+            date_view={
+                "view":0,
+                "date":'0-0-0'
+            }
         # Create a YouTube object from the URL
         yt = YouTube(url)
         # Get the audio stream
@@ -22,8 +33,21 @@ def process_youtube_url(url):
         model = whisper.load_model("base")
         result = model.transcribe(f"{output_path}/{filename}")
         transcribed_text = result["text"]
+        tom_tat=Tom_Tat(transcribed_text)
+        cam_xuc=text_sentiment_analysis(transcribed_text)
+        global feeling
+        if cam_xuc['POSITIVE_SCORE']>cam_xuc['NEGATIVE_SCORE']:
+            feeling='POSITIVE'
+        if cam_xuc['POSITIVE_SCORE']<cam_xuc['NEGATIVE_SCORE']:
+            feeling='NEGATIVE'
+        if cam_xuc['POSITIVE_SCORE']==cam_xuc['NEGATIVE_SCORE']:
+            feeling='NEUTRAL'
         print("Transcription:")
         print(transcribed_text)
+        print("Tóm Tăt :", tom_tat)
+        print ("Cảm xúc", feeling)
+        print("Tóm Tăt :", date_view['date'])
+        print ("Cảm xúc", date_view['view'])
 
         # Detect the language
         language = detect(transcribed_text)
@@ -33,7 +57,7 @@ def process_youtube_url(url):
         os.remove(f"{output_path}/{filename}")
         os.rmdir(output_path)
 
-        return {"url": url,"title":title, "content": transcribed_text}
+        return {"url": url,"title":info['title'], "content": transcribed_text, "summary":tom_tat,"feeling":feeling, "view":date_view['view'],"date":date_view['date'].strftime('%Y-%m-%d')}
 
     except Exception as e:
         print(f"An error occurred while processing {url}: {str(e)}")

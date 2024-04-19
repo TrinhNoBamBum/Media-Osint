@@ -14,9 +14,9 @@ export default function Home() {
   const [isTRue, setTrue]=useState(false)
   const [crawlData, setCrawlData] = useState<any>();
   const[topics,setTopics]=useState<any>();
-  const [isOpen, setIsOpen1] = useState(false);
-  const openModal = () => setIsOpen1(true);
-  const closeModal = () => setIsOpen1(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const openModal = () => setIsOpen(true);
+  const closeModal = () => setIsOpen(false);
   const [topic, setTopic] = useState('');
 
   useEffect(()=>{

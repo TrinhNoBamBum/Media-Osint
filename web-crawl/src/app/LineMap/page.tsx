@@ -3,32 +3,58 @@ import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 import { useEffect, useRef, useState } from 'react';
 
-const LineMap = () => {
+const LineMap = ({ data }: any) => {
+    const [chartData, setChartData] = useState([
+        { name: "POSITIVE", data: Array(12).fill(0) },
+        { name: "NEGATIVE", data: Array(12).fill(0) },
+        { name: "NEUTRAL", data: Array(12).fill(0) }
+    ]);
+
+    // Update chartData whenever data changes
+    useEffect(() => {
+        if (data) {
+            const newChartData = [
+                { name: "POSITIVE", data: Array(12).fill(0) },
+                { name: "NEGATIVE", data: Array(12).fill(0) },
+                { name: "NEUTRAL", data: Array(12).fill(0) }
+            ];
+
+            data.forEach((item: any) => {
+                const dateParts = item.date.split('-');
+                const monthIndex = parseInt(dateParts[1]) - 1;
+                switch (item.feeling) {
+                    case "POSITIVE":
+                        newChartData[0].data[monthIndex]++;
+                        break;
+                    case "NEGATIVE":
+                        newChartData[1].data[monthIndex]++;
+                        break;
+                    case "NEUTRAL":
+                        newChartData[2].data[monthIndex]++;
+                        break;
+                }
+            });
+
+            setChartData(newChartData);
+        }
+    }, [data]);
+
     const chartRef = useRef(null);
-    const [chartOptions, setChartOptions] = useState({
+
+    const chartOptions = {
         title: {
-            text: 'Biểu đồ đánh giá tin tức'
+            text: 'Biểu đồ đánh giá sắc thái tin tức'
         },
         xAxis: {
             categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
         },
-        series: [{
-            name: 'Tích cực',
-            data: [7.0, 6.9, 9.5, 14.5, 18.2, 21.5, 25.2, 26.5, 23.3, 18.3, 13.9, 9.6]
-        }, {
-            name: 'Tiêu cực',
-            data: [-0.2, 0.8, 5.7, 11.3, 17.0, 22.0, 24.8, 24.1, 20.1, 14.1, 8.6, 2.5],
-            color:'red'
-        }, {
-            name: 'Trung tính',
-            data: [-0.9, 0.6, 3.5, 8.4, 13.5, 17.0, 18.6, 17.9, 14.3, 9.0, 3.9, 1.0]
-        }]
-    });
+        series: chartData
+    };
 
     useEffect(() => {
         if (chartRef.current) {
             // Access the chart object and perform any additional customization if needed
-            console.log(chartRef.current.chart);
+            // console.log(chartRef.current.chart);
         }
     }, [chartRef]);
 
@@ -36,5 +62,4 @@ const LineMap = () => {
         <HighchartsReact highcharts={Highcharts} options={chartOptions} ref={chartRef} />
     );
 };
-
-export default LineMap;
+export default LineMap

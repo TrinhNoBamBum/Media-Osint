@@ -15,5 +15,8 @@ def get_Title(urlOR):
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
     title = soup.find("h1",{'class':'ytd-watch-metadata'})
-    view = soup.find("yt-formatted-string",{'id':'info'})
-    return title.text
+    view = soup.find("tp-yt-paper-tooltip",{'class':'ytd-watch-info-text'})
+    return {
+        "title":title.text,
+        "view":view.text
+    }
