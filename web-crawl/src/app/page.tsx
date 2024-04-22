@@ -39,7 +39,7 @@ export default function Home() {
       }
     }
     get_topic()
-  },[])
+  },[isOpen])
 
   //get page
   useEffect(()=>{
