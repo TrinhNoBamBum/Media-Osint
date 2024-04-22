@@ -6,9 +6,9 @@ model = RobertaForSequenceClassification.from_pretrained("wonrax/phobert-base-vi
 tokenizer = AutoTokenizer.from_pretrained("wonrax/phobert-base-vietnamese-sentiment", use_fast=False)
 
 # Just like PhoBERT: INPUT TEXT MUST BE ALREADY WORD-SEGMENTED!
-sentence = 'Tình yêu thương là món quà đặc biệt của cuộc sống và không ai có thể sống mà không cần được yêu thương. Vì vậy, đừng ngần ngại thổ lộ yêu thương với những người thân bên cạnh bạn. Bố mẹ, bạn bè, người yêu và cả chính bản thân bạn cũng cần được lắng nghe những lời đẹp, ý hay. Vậy bạn đã chuẩn bị được “món quà tinh thần” này chưa? '  
+#entence = 'Tình yêu thương là món quà đặc biệt của cuộc sống và không ai có thể sống mà không cần được yêu thương. Vì vậy, đừng ngần ngại thổ lộ yêu thương với những người thân bên cạnh bạn. Bố mẹ, bạn bè, người yêu và cả chính bản thân bạn cũng cần được lắng nghe những lời đẹp, ý hay. Vậy bạn đã chuẩn bị được “món quà tinh thần” này chưa? '  
 def pt_cam_xuc_vnmese(contents):
-    input_ids = torch.tensor([tokenizer.encode(sentence)])
+    input_ids = torch.tensor([tokenizer.encode(contents)])
 
     with torch.no_grad():
         out = model(input_ids)

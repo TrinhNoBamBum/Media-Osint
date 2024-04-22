@@ -7,6 +7,8 @@ from crawlTitle import get_Title
 from pt_cam_xuc import text_sentiment_analysis
 from tom_tat_doc import Tom_Tat
 from covert import Covert
+from tom_tat_VN import tom_tat_vn
+from pt_cam_xuc_vn import pt_cam_xuc_vnmese
 # Function to process YouTube URL, transcribe, and save result to JSON
 def process_youtube_url(url):
     try:
@@ -33,21 +35,40 @@ def process_youtube_url(url):
         model = whisper.load_model("base")
         result = model.transcribe(f"{output_path}/{filename}")
         transcribed_text = result["text"]
-        tom_tat=Tom_Tat(transcribed_text)
-        cam_xuc=text_sentiment_analysis(transcribed_text)
-        global feeling
-        if cam_xuc['POSITIVE_SCORE']>cam_xuc['NEGATIVE_SCORE']:
-            feeling='POSITIVE'
-        if cam_xuc['POSITIVE_SCORE']<cam_xuc['NEGATIVE_SCORE']:
-            feeling='NEGATIVE'
-        if cam_xuc['POSITIVE_SCORE']==cam_xuc['NEGATIVE_SCORE']:
-            feeling='NEUTRAL'
-        print("Transcription:")
-        print(transcribed_text)
-
-        # Detect the language
         language = detect(transcribed_text)
         print(f"Detected language: {language}")
+        print(transcribed_text)
+        global tom_tat
+        global cam_xuc
+        if(language=='vi'):
+            tom_tat=tom_tat_vn(transcribed_text)
+            cam_xuc=pt_cam_xuc_vnmese(transcribed_text[:250])
+        else:
+            tom_tat=Tom_Tat(transcribed_text)
+            cam_xuc=text_sentiment_analysis(transcribed_text)
+        
+        global feeling
+        if (language=="vi"):
+            if(cam_xuc['POSITIVE_SCORE']>0.8):
+                feeling='POSITIVE'
+            if(cam_xuc['NEGATIVE_SCORE']<0.2):
+                feeling='NEGATIVE'
+            else:
+                feeling='NEUTRAL'
+        else:
+            if cam_xuc['POSITIVE_SCORE']>cam_xuc['NEGATIVE_SCORE']:
+                feeling='POSITIVE'
+            if cam_xuc['POSITIVE_SCORE']<cam_xuc['NEGATIVE_SCORE']:
+                feeling='NEGATIVE'
+            if cam_xuc['POSITIVE_SCORE']==cam_xuc['NEGATIVE_SCORE']:
+                feeling='NEUTRAL'
+        print("Transcription:")
+        
+        print("Văn bản tóm tắt :",tom_tat),
+        print("Cảm xúc :",cam_xuc)
+        print("Feeling",feeling)
+        # Detect the language
+        
 
         # Clean up downloaded audio file
         os.remove(f"{output_path}/{filename}")
