@@ -11,7 +11,8 @@ const PieMap = ({ crawlData }: any) => {
     var data:any=[]
     if(crawlData){
         data=Object.entries(crawlData).map(([key, value]:any) => [key, value?.length])
-    }
+        console.log("Dữ liệu",data,crawlData)
+      }
     
     // Xây dựng options với dữ liệu từ prop crawlData
     const options = {

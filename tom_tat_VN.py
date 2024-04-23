@@ -5,7 +5,7 @@ from gensim.models import KeyedVectors
 from sklearn.cluster import KMeans
 import nltk
 from sklearn.metrics import pairwise_distances_argmin_min
-nltk.download('punkt')
+#nltk.download('punkt')
 def tom_tat_vn(contents):
     sentences = nltk.sent_tokenize(contents.lower().strip())
     w2v = KeyedVectors.load_word2vec_format("vi_txt/vi.vec")

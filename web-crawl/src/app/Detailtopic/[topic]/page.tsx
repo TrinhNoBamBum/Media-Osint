@@ -4,13 +4,28 @@ import React from "react";
 import { useState,useEffect } from "react";
 import LineMap from "@/app/LineMap/page";
 import axios from 'axios';
+import { useRouter } from 'next/navigation'
+import PieMapComment from "@/app/PieMapComment/page";
 const Detailtopic =({ params }: { params: { topic: string } })=>{
-
+    const router=useRouter()
       const [view,setWiew]=useState(null)
+      const [isComment,setIsComment]=useState(null)
+      const [comments,setComments]=useState<any>()
       const handlSetView=(index:any)=>{
           setWiew(index)
+          setIsComment(null)
+          setComments(null)
+
       }
       const handeClose=()=>{
+        setWiew(null)
+        setIsComment(null)
+        setComments(null)
+      }
+      const handlSetLink=(index:any,cmt:any)=>{
+        
+        setIsComment(index)
+        setComments(cmt)
         setWiew(null)
       }
       const [crawlData, setCrawlData] = useState<any>();
@@ -77,9 +92,9 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
                                         <a href={item?.url} className="min-w-80">{item?.url}</a>
                                         <span className="float-right cursor-pointer text-indigo-700 underline ml-2" onClick={handeClose}>Đóng</span>
                                         <span className="float-right cursor-pointer text-indigo-700 underline" onClick={()=>handlSetView(index)}>View</span>
-                                        
+                                        <span className="float-right cursor-pointer text-indigo-700 underline mr-2" onClick={()=>handlSetLink(index,item?.comments)}>Comment</span>
                                         {
-                                            view!=index?(""):(<div className="border-solid border-2 border-gray-400 p-2">
+                                            view==index?(<div className="border-solid border-2 border-gray-400 p-2">
                                                 <ul>
                                                     <li>
                                                         <span className="font-semibold">Tiêu đề : </span> {item?.title}
@@ -97,7 +112,22 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
                                                         <span className="font-semibold">Thời gian :</span> {item?.date}
                                                     </li>
                                                 </ul>
-                                            </div>)
+                                            </div>):isComment==index?<div className="border-solid border-2 border-gray-400 p-2">
+                                                <ul>
+                                                    {
+                                                        item?.comments.map((comment:any, ind:any)=>(
+                                                            <li>
+                                                            {comment?.feeling_cmt=='POSITIVE'?<span className="bg-lime-400 rounded-full text-white px-2">{"    "+ comment?.content_cmt}</span>:comment.feeling_cmt=='NEGATIVE'?<span className="bg-red-500 rounded-full text-white px-2">{"    "+ comment?.content_cmt}</span>:<span className="bg-blue-400 rounded-full text-white px-2">{"    "+ comment?.content_cmt}</span>}
+                                                            </li>
+                                                            // <li>
+                                                            //     <span className="font-semibold">{"    "+ comment?.content_cmt}</span>
+                                                            // </li>
+                                                        ))
+                                                    }
+                                                    
+                            
+                                                </ul>
+                                            </div>:("")
                                         }
                                         
                                     </div> 
@@ -106,7 +136,10 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
                     </div>
                 </div>
                 <div className="w-2/4 border-solid border-2 border-slate-400 p-2">
-                        <LineMap data={crawlData?.[`${params?.topic}`]}></LineMap>
+                    {
+                        comments!=null?<PieMapComment crawlData={comments}></PieMapComment>:<LineMap data={crawlData?.[`${params?.topic}`]}></LineMap>
+                    }
+                        
                 </div>
 
             </div>
