@@ -1,7 +1,7 @@
 import json
 from getURLselenium import call_url
 from youtube_audio_to_text import update_dataPY
-from filter_topic import topWork
+from filter_topic import topWork,end_Result
 from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
@@ -10,6 +10,7 @@ import shutil
 import whisper
 from pytube import YouTube
 from langdetect import detect
+
 
 
 app = Flask(__name__)
@@ -155,6 +156,22 @@ def add_page():
             # Gọi hàm append_data_to_file để thêm dữ liệu vào tệp
             add_to_json('url_page.json',data['data'])
             return jsonify({'message': 'Dữ liệu đã được thêm vào tệp thành công'}), 200
+        else:
+            return jsonify({'error': 'Không tìm thấy dữ liệu trong yêu cầu'}), 400
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+#api call Key Comment
+@app.route('/api/call_key_comment',methods=['POST'])
+def get_key_comment():
+    try:
+        data=request.json
+ 
+        arr=[]
+        if data is not None:
+            
+            arr=end_Result(data['comments'])
+            return jsonify(arr), 200
         else:
             return jsonify({'error': 'Không tìm thấy dữ liệu trong yêu cầu'}), 400
     except Exception as e:

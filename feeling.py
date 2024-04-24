@@ -12,3 +12,4 @@ def feelingEN(cam_xuc):
         return 'NEGATIVE'
     else:
        return 'NEUTRAL'
+    

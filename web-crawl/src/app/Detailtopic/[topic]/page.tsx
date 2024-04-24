@@ -6,11 +6,13 @@ import LineMap from "@/app/LineMap/page";
 import axios from 'axios';
 import { useRouter } from 'next/navigation'
 import PieMapComment from "@/app/PieMapComment/page";
+import OverMap from "@/app/OverMap/page";
 const Detailtopic =({ params }: { params: { topic: string } })=>{
     const router=useRouter()
       const [view,setWiew]=useState(null)
       const [isComment,setIsComment]=useState(null)
       const [comments,setComments]=useState<any>()
+      const [dataMap, setDataMap]=useState<any>()
       const handlSetView=(index:any)=>{
           setWiew(index)
           setIsComment(null)
@@ -54,8 +56,6 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
                         if (item.feeling == "NEUTRAL") {
                             setNeutral(prev => prev + 1);
                         }
-                        console.log(123)
-                         // Đánh dấu là đã xử lý
                     
                 })
              
@@ -66,7 +66,22 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
         };
         fetchData()
       },[])
-      
+      useEffect(()=>{
+        const requestData=async()=>{
+           try {
+            if(comments){
+                console.log("cm",comments)
+                const wordcomments:any=await axios.post('http://127.0.0.1:5000/api/call_key_comment',{comments})
+                console.log("Comment nhỉ",wordcomments?.data)
+                setDataMap(wordcomments?.data)
+            }
+            
+           } catch (error) {
+                console.log("Detect err", error)
+           }
+        }
+        requestData()
+      },[comments])
     return (
        
         <div className="p-5">
@@ -115,7 +130,7 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
                                             </div>):isComment==index?<div className="border-solid border-2 border-gray-400 p-2">
                                                 <ul>
                                                     {
-                                                        item?.comments.map((comment:any, ind:any)=>(
+                                                        item?.comments?.map((comment:any, ind:any)=>(
                                                             <li>
                                                             {comment?.feeling_cmt=='POSITIVE'?<span className="bg-lime-400 rounded-full text-white px-2">{"    "+ comment?.content_cmt}</span>:comment.feeling_cmt=='NEGATIVE'?<span className="bg-red-500 rounded-full text-white px-2">{"    "+ comment?.content_cmt}</span>:<span className="bg-blue-400 rounded-full text-white px-2">{"    "+ comment?.content_cmt}</span>}
                                                             </li>
@@ -137,7 +152,7 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
                 </div>
                 <div className="w-2/4 border-solid border-2 border-slate-400 p-2">
                     {
-                        comments!=null?<PieMapComment crawlData={comments}></PieMapComment>:<LineMap data={crawlData?.[`${params?.topic}`]}></LineMap>
+                        comments!=null?<OverMap dataMap={dataMap}></OverMap>:<LineMap data={crawlData?.[`${params?.topic}`]}></LineMap>
                     }
                         
                 </div>
@@ -149,6 +164,7 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
 }
 export default Detailtopic
 {/* <div>
+<PieMapComment crawlData={comments}></PieMapComment>
 <div className="flex">
     <a href={item?.url}>
         <li className="text-red-500 underline">{ count+1 +".  " + item?.url}</li>
