@@ -72,6 +72,7 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
                 console.log("cm",comments)
                 const wordcomments:any=await axios.post('http://127.0.0.1:5000/api/call_key_comment',{comments})
                 setDataMap(wordcomments?.data)
+                console.log("End",wordcomments )
             }
             
            } catch (error) {

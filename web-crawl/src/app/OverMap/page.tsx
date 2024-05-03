@@ -7,6 +7,7 @@ import HighchartsMore from 'highcharts/highcharts-more';
 HighchartsMore(Highcharts);
 
 const OverMap = ({dataMap}:any) => {
+  
   dataMap?.forEach((comment:any) => {
     switch (comment.name) {
         case "NEUTRAL":
@@ -28,6 +29,9 @@ const OverMap = ({dataMap}:any) => {
         type: 'packedbubble',
         height: '100%'
       },
+      accessibility: {
+        enabled: false // Vô hiệu hóa tính năng truy cập
+      },
       title: {
         text: 'Từ xuất hiện nhiều ở các bình luận',
         align: 'center'
@@ -38,10 +42,10 @@ const OverMap = ({dataMap}:any) => {
       },
       plotOptions: {
         packedbubble: {
-          minSize: '10%',
-          maxSize: '200%',
+          minSize: '30%',
+          maxSize: '120%',
           zMin: 0,
-          zMax: 500,
+          zMax: 5,
           layoutAlgorithm: {
             splitSeries: false,
             gravitationalConstant: 0.02
@@ -49,16 +53,15 @@ const OverMap = ({dataMap}:any) => {
           dataLabels: {
             enabled: true,
             format: '{point.name}',
-            // filter: {
-            //   property: 'y',
-            //   operator: '>',
-            //   value: 250
-            // },
+            filter: {
+              property: 'y',
+              operator: '>',
+              value: 2
+            },
             style: {
               color: 'black',
-              fontSize:'15px',
-              textOutline: 'none',
-              fontWeight: 'bold'
+              fontSize:'12px',
+              textOutline: 'none'
             }
           }
         }

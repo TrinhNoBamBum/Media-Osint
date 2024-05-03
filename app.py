@@ -69,8 +69,10 @@ def group_data_by_topic(data):
 def group_by_user(data, conditions):
     grouped_data = {key: [] for key in conditions}
     for item in data:
+        title_lowercase = item["title"].lower()
         for key in conditions:
-            if key in item["title"]:
+            key_lowercase = key.lower() 
+            if key_lowercase in title_lowercase:
                 grouped_data[key].append(item)
                 break  # Thoát khỏi vòng lặp khi đã nhóm được
     return grouped_data
