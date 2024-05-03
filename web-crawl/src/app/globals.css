@@ -18,10 +18,12 @@ body {
 
 .button{
   border:1px solid #f1f1f1;
-  background: #19c37d;
+  background: rgb(129 140 248);
   color:white;
   border-radius: 20px;
   padding: 5px 25px 5px 25px;
+  display:flex;
+  justify-content: center;
   
   
 }

@@ -38,10 +38,10 @@ const OverMap = ({dataMap}:any) => {
       },
       plotOptions: {
         packedbubble: {
-          minSize: '50%',
+          minSize: '10%',
           maxSize: '200%',
           zMin: 0,
-          zMax: 1000,
+          zMax: 500,
           layoutAlgorithm: {
             splitSeries: false,
             gravitationalConstant: 0.02
@@ -56,7 +56,7 @@ const OverMap = ({dataMap}:any) => {
             // },
             style: {
               color: 'black',
-              fontSize:'20px',
+              fontSize:'15px',
               textOutline: 'none',
               fontWeight: 'bold'
             }

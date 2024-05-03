@@ -32,7 +32,6 @@ export default function Home() {
     const get_topic=async()=>{
       try {
         const response = await axios.get('http://127.0.0.1:5000/api/get_topic');
-        console.log(response)
         setTopics(response.data)
       } catch (error) {
         console.error('Lỗi khi gọi API:', error);
@@ -46,7 +45,6 @@ export default function Home() {
     const get_page=async()=>{
       try {
         const response = await axios.get('http://127.0.0.1:5000/api/get_pages');
-        console.log(response.data)
         setPages(response.data)
       } catch (error) {
         console.error('Lỗi khi gọi API:', error);
@@ -58,7 +56,6 @@ export default function Home() {
     const fetchData = async () => {
       try {
           const response = await axios.get('http://127.0.0.1:5000/api/data');
-          console.log(response)
           setCrawlData(response.data)
       } catch (error) {
           console.error('Lỗi khi gọi API:', error);
@@ -132,9 +129,20 @@ export default function Home() {
     setUrlPage(item)
   };
   const handleGetDetail=(url:string)=>{
-    router.push(`/Detailtopic/${url}`)
+    router.push(`/Detailtopic/${encodeToHex(url)}`)
   }
   // console.log(crawlData?.["Ukraine"])
+  //end-code url
+ 
+  function encodeToHex(text:any) {
+    var hexString = '';
+    for (var i = 0; i < text.length; i++) {
+        var hex = text.charCodeAt(i).toString(16);
+        hexString += ('000' + hex).slice(-4); // Đảm bảo rằng mỗi ký tự được biểu diễn bằng 4 ký tự HEX
+    }
+    return hexString.toUpperCase(); // Chuyển chuỗi HEX thành chữ in hoa để dễ đọc và xử lý
+}
+
   return (
     <div>
     {isTRue===true ?(<div className="bg-gray-200 h-screen flex justify-center items-center">
@@ -186,8 +194,8 @@ export default function Home() {
               <tr>
               <td className="py-3 px-4">{index+1}</td>
               <td className="py-3 px-4">{item}</td>
-              <td className="py-3 px-4">{crawlData?.[`${item}`].length||0} video</td>
-              <td className="py-3 px-4"><p className='button w-1/2' onClick={()=>handleGetDetail( item)}>Xem</p></td>
+              <td className="py-3 px-4">{crawlData?.[`${item}`]?.length||0} video</td>
+              <td className="py-3 px-4 justify-center flex"><p className='button w-1/2' onClick={()=>handleGetDetail( item)}>Xem</p></td>
             </tr>
           ))
 

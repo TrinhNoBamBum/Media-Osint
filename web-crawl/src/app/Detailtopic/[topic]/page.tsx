@@ -39,13 +39,12 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
         const fetchData = async () => {
           try {
                 const response:any = await axios.get('http://127.0.0.1:5000/api/data');
-                console.log(response)
                 setCrawlData(response?.data)
                  // Biến kiểm tra đã xử lý hay chưa
                 setNegative(0)
                 setNeutral(0)
                 setPositive(0)
-                response?.data[params?.topic].forEach((item: any) => {
+                response?.data[decodeHex(params?.topic)].forEach((item: any) => {
                     
                         if (item.feeling == "NEGATIVE") {
                             setNegative(prev => prev + 1);
@@ -72,7 +71,6 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
             if(comments){
                 console.log("cm",comments)
                 const wordcomments:any=await axios.post('http://127.0.0.1:5000/api/call_key_comment',{comments})
-                console.log("Comment nhỉ",wordcomments?.data)
                 setDataMap(wordcomments?.data)
             }
             
@@ -82,10 +80,20 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
         }
         requestData()
       },[comments])
+
+      function decodeHex(encodedString:any) {
+        var hexString = encodedString.replace(/[^0-9A-Fa-f]/g, ''); // Lọc các ký tự không hợp lệ
+        var decodedString = '';
+        for (var i = 0; i < hexString.length; i += 4) {
+            decodedString += String.fromCharCode(parseInt(hexString.substr(i, 4), 16));
+        }
+        return decodedString;
+    }
+    
     return (
        
         <div className="p-5">
-            <div className="font-mono text-2xl ">CHỦ ĐỀ :{params?.topic} </div>
+            <div className="font-mono text-2xl ">CHỦ ĐỀ :{decodeHex(params?.topic)} </div>
             <div className="w-full flex border-solid border-2 border-slate-400 p-2 mb-2 justify-around">
                 <div className="bg-red-500 font-mono text-2xl font-semibold text-white w-1/4 p-3">Tiêu cực
                 <h3>{negative}</h3>
@@ -99,10 +107,10 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
             </div>
             <div className="flex">
                 <div className="w-2/4 border-solid border-2 border-slate-400 p-2">
-                    <h3 className="font-bold">Link url liên quan đến chủ đề {params?.topic}</h3>
+                    <h3 className="font-bold">Link url liên quan đến chủ đề {decodeHex(params?.topic)}</h3>
                     <div className="divide-y divide-slate-400">
                         {
-                            crawlData?.[`${params?.topic}`].map((item:any, index:any)=>(
+                            crawlData?.[`${decodeHex(params?.topic)}`]?.map((item:any, index:any)=>(
                                     <div>
                                         <a href={item?.url} className="min-w-80">{item?.url}</a>
                                         <span className="float-right cursor-pointer text-indigo-700 underline ml-2" onClick={handeClose}>Đóng</span>
@@ -152,7 +160,7 @@ const Detailtopic =({ params }: { params: { topic: string } })=>{
                 </div>
                 <div className="w-2/4 border-solid border-2 border-slate-400 p-2">
                     {
-                        comments!=null?<OverMap dataMap={dataMap}></OverMap>:<LineMap data={crawlData?.[`${params?.topic}`]}></LineMap>
+                        comments!=null?<OverMap dataMap={dataMap}></OverMap>:<LineMap data={crawlData?.[`${decodeHex(params?.topic)}`]}></LineMap>
                     }
                         
                 </div>
